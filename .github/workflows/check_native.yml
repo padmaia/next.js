@@ -1,8 +1,10 @@
 on:
   pull_request:
     types: [opened, synchronize]
+    paths:
+      - 'packages/next/build/swc/**'
 
-name: Check next-swc native binaries are up to date
+name: Build next-swc native binaries
 
 jobs:
   build:
@@ -105,7 +107,7 @@ jobs:
           cargo-cache
 
   check:
-    needs: [build, build-apple-silicone]
+    needs: [build, build-apple-silicon]
     runs-on: ubuntu-18.04
 
     steps:
