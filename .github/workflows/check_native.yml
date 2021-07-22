@@ -1,4 +1,8 @@
-on: workflow_dispatch
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'packages/next/build/swc/**'
 
 name: Build next-swc native binaries
 
@@ -102,7 +106,7 @@ jobs:
           cargo install cargo-cache --no-default-features --features ci-autoclean
           cargo-cache
 
-  commit:
+  check:
     needs: [build, build-apple-silicone]
     runs-on: ubuntu-18.04
 
@@ -112,7 +116,4 @@ jobs:
         with:
           name: next-swc-binaries
           path: packages/next/native
-      - uses: EndBug/add-and-commit@v7
-        with:
-          add: 'packages/next/native --force'
-          message: 'Build next-swc binaries'
+      - run: ./scripts/check-pre-compiled.sh
