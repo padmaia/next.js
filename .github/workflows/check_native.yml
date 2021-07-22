@@ -1,8 +1,6 @@
 on:
   pull_request:
     types: [opened, synchronize]
-    paths:
-      - 'packages/next/build/swc/**'
 
 name: Build next-swc native binaries
 
