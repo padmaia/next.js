@@ -2,7 +2,7 @@ on:
   pull_request:
     types: [opened, synchronize]
 
-name: Build next-swc native binaries
+name: Check next-swc native binaries are up to date
 
 jobs:
   build:
