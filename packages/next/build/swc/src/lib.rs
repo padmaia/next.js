@@ -35,6 +35,7 @@ static COMPILER: Lazy<Arc<Compiler>> = Lazy::new(|| {
 
 #[module_exports]
 fn init(mut exports: JsObject) -> napi::Result<()> {
+    println!("testing something out");
     if cfg!(debug_assertions) || env::var("SWC_DEBUG").unwrap_or_default() == "1" {
         set_hook(Box::new(|panic_info| {
             let backtrace = Backtrace::new();
