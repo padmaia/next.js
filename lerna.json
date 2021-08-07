@@ -12,10 +12,11 @@
       "npmClient": "npm",
       "allowBranch": [
         "master",
-        "canary"
+        "canary",
+        "default"
       ],
       "registry": "https://registry.npmjs.org/"
     }
   },
-  "version": "11.0.2-canary.26"
+  "version": "11.0.2-practice.0"
 }
