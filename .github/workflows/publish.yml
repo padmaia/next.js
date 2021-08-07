@@ -1,10 +1,8 @@
 on:
-  push:
-    branches: [canary]
-  pull_request:
-    types: [opened, synchronize]
+  release:
+    types: [published]
 
-name: Build, test, and deploy
+name: Publish
 
 jobs:
   build:
@@ -238,21 +236,6 @@ jobs:
       - run: '[[ -z "$BROWSERSTACK_ACCESS_KEY" ]] && echo "Skipping for PR" || node run-tests.js -c 1 test/integration/production-nav/test/index.test.js'
         if: ${{needs.build.outputs.docsChange != 'docs only change'}}
 
-  publishRelease:
-    name: Potentially publish release
-    runs-on: ubuntu-latest
-    needs: build
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    steps:
-      - uses: actions/cache@v2
-        id: restore-build
-        with:
-          path: ./*
-          key: ${{ github.sha }}
-
-      - run: ./scripts/publish-release.sh
-
   prStats:
     name: Release Stats
     runs-on: ubuntu-latest
@@ -267,3 +250,120 @@ jobs:
       - uses: ./.github/actions/next-stats-action
         env:
           PR_STATS_COMMENT_TOKEN: ${{ secrets.PR_STATS_COMMENT_TOKEN }}
+
+  build-default-native:
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, macos-latest, windows-latest]
+
+    name: stable - ${{ matrix.os }} - node@14
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          check-latest: true
+
+      - name: Install
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+
+      - name: Cache cargo registry
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: stable-${{ matrix.os }}-node@14-cargo-registry-trimmed-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo index
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: stable-${{ matrix.os }}-node@14-cargo-index-trimmed-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache NPM dependencies
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-cache-${{ matrix.os }}-node@14-${{ hashFiles('yarn.lock') }}
+
+      - name: 'Install dependencies'
+        run: yarn install --frozen-lockfile --registry https://registry.npmjs.org --network-timeout 300000
+
+      - name: 'Build'
+        run: yarn --cwd packages/next build-native
+        env:
+          MACOSX_DEPLOYMENT_TARGET: '10.13'
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: next-swc-binaries
+          path: packages/next/native
+
+      - name: Clear the cargo caches
+        run: |
+          cargo install cargo-cache --no-default-features --features ci-autoclean
+          cargo-cache
+
+  build-apple-silicon:
+    name: stable - aarch64-apple-darwin - node@14
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          override: true
+          toolchain: nightly-2021-03-25
+          target: aarch64-apple-darwin
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --registry https://registry.npmjs.org --network-timeout 300000
+
+      - name: Cross build aarch64
+        run: yarn --cwd packages/next build-native --target aarch64-apple-darwin
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: next-swc-binaries
+          path: packages/next/native
+
+      - name: Clear the cargo caches
+        run: |
+          cargo install cargo-cache --no-default-features --features ci-autoclean
+          cargo-cache
+
+  publishRelease:
+    name: Potentially publish release
+    runs-on: ubuntu-latest
+    needs: [build, build-default-native, build-apple-silicon]
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/cache@v2
+        id: restore-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: next-swc-binaries
+          path: packages/next/native
+
+      - run: ./scripts/prepublish-native.sh
