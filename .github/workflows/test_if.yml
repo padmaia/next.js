@@ -13,9 +13,9 @@ jobs:
     steps:
       - id: step1
         run: |
-          if ["$GITHUB_EVENT_NAME" = "pull_request" && ! git diff $GITHUB_BASE_REF]; then \
-          echo "::set-output name=pr-with-rust-changes::true" \
-          fi \
+          if ["$GITHUB_EVENT_NAME" = "pull_request" && ! git diff $GITHUB_BASE_REF]; then
+          echo "::set-output name=pr-with-rust-changes::true"
+          fi
 
   use-ifs:
     runs-on: ubuntu-latest
