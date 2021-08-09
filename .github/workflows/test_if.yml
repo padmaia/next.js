@@ -1,0 +1,24 @@
+on:
+  push:
+    branches: [default]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  get-ifs:
+    runs-on: ubuntu-latest
+    outputs:
+      pr-with-rust-changes: ${{ steps.step1.outputs.pr-with-rust-changes }}
+      tag-with-rust-changes: ${{ steps.step2.outputs.tag-with-rust-changes }}
+    steps:
+      - id: step1
+        run: |
+          if ["$GITHUB_EVENT_NAME" = "pull_request" && ! git diff $GITHUB_BASE_REF]; then \
+            echo "::set-output name=pr-with-rust-changes::true" \
+          fi \
+
+  use-ifs:
+    runs-on: ubuntu-latest
+    needs: get-ifs
+    steps:
+      - run: echo ${{needs.get-ifs.outputs.pr-with-rust-changes}}
