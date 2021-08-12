@@ -13,6 +13,7 @@ const cwd = process.cwd()
     let version = JSON.parse(await readFile(path.join(cwd, 'lerna.json')))
       .version
     let gitref = process.argv.slice(2)[0]
+    console.log('PROCESS.ARGV', process.argv)
 
     // Copy binaries to package folders, update version, and publish
     let nativePackagesDir = path.join(cwd, 'packages/next/build/swc/npm')
@@ -37,13 +38,13 @@ const cwd = process.cwd()
         path.join(nativePackagesDir, nativePackage, 'package.json'),
         JSON.stringify(pkg, null, 2)
       )
-      publishPromises.push(
-        exec(
-          `npm publish ${path.join(nativePackagesDir, nativePackage)}${
-            gitref.contains('canary') ? ' --tag canary' : ''
-          }`
-        )
-      )
+      // publishPromises.push(
+      //   exec(
+      //     `npm publish ${path.join(nativePackagesDir, nativePackage)}${
+      //       gitref.contains('canary') ? ' --tag canary' : ''
+      //     }`
+      //   )
+      // )
       // lerna publish in next step will fail if git status is not clean
       publishPromises.push(
         exec(
