@@ -12,20 +12,20 @@ if [[ -z "$NPM_TOKEN" ]];then
   exit 0;
 fi
 
-if [[ $(git describe --exact-match 2> /dev/null || :) =~ -canary ]];
+if [[ $(git describe --exact-match 2> /dev/null || :) =~ -practice ]];
 then
-  echo "Publishing canary"
-  yarn run lerna publish from-git --npm-tag canary --yes
+  echo "Publishing practice"
+  yarn run lerna publish from-git --npm-tag practice --yes --no-verify-access
 
   # Make sure to exit script with code 1 if publish failed
   if [[ ! $? -eq 0 ]];then
     exit 1;
   fi
 else
-  echo "Did not publish canary"
+  echo "Did not publish practice"
 fi
 
-if [[ ! $(git describe --exact-match 2> /dev/null || :) =~ -canary ]];then
+if [[ ! $(git describe --exact-match 2> /dev/null || :) =~ -practice ]];then
   echo "Publishing stable"
   yarn run lerna publish from-git --yes
 
