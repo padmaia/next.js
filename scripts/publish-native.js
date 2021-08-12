@@ -33,9 +33,10 @@ const cwd = process.cwd()
         JSON.stringify(pkg, null, 2)
       )
       execSync(
-        `npm publish ${path.join(nativePackagesDir, platform)}${
-          gitref.includes('canary') ? ' --tag canary' : ''
-        }`
+        `npm publish ${path.join(
+          nativePackagesDir,
+          platform
+        )} --access public ${gitref.includes('canary') ? ' --tag canary' : ''}`
       )
       // lerna publish in next step will fail if git status is not clean
       execSync(
@@ -53,7 +54,7 @@ const cwd = process.cwd()
     )
     for (let platform of platforms) {
       let optionalDependencies = nextPkg.optionalDependencies || {}
-      optionalDependencies['@next/swc-' + platform] = version
+      optionalDependencies['@padmaia/swc-' + platform] = version
       nextPkg.optionalDependencies = optionalDependencies
     }
     await writeFile(

@@ -11,7 +11,7 @@ const path = require('path')
  */ const bindings = loadBinding(
   path.join(__dirname, '../../../native'),
   'next-swc',
-  '@next/swc'
+  '@padmaia/swc'
 )
 async function transform(src, options) {
   var ref
