@@ -256,5 +256,8 @@
     "triples": {
       "defaults": true
     }
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
