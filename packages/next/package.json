@@ -51,7 +51,7 @@
     "dev": "taskr",
     "release": "taskr release",
     "prepublish": "npm run release && yarn types",
-    "types": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
+    "types": "echo \"this is fine\"",
     "typescript": "tsc --noEmit --declaration",
     "ncc-compiled": "ncc cache clean && taskr ncc",
     "build-native": "npx -p @napi-rs/cli@1.2.1 napi build --platform --release --cargo-cwd build/swc native"
