@@ -3,8 +3,7 @@
 const path = require('path')
 const { readFile, readdir, writeFile } = require('fs/promises')
 const { copy } = require('fs-extra')
-const util = require('util')
-const exec = util.promisify(require('child_process').exec)
+const { execSync } = require('child_process')
 
 const cwd = process.cwd()
 
@@ -18,7 +17,6 @@ const cwd = process.cwd()
     // Copy binaries to package folders, update version, and publish
     let nativePackagesDir = path.join(cwd, 'packages/next/build/swc/npm')
     let nativePackages = await readdir(nativePackagesDir)
-    let publishPromises = []
     for (let nativePackage of nativePackages) {
       if (nativePackage === '.gitignore') {
         continue
@@ -46,17 +44,14 @@ const cwd = process.cwd()
       //   )
       // )
       // lerna publish in next step will fail if git status is not clean
-      publishPromises.push(
-        exec(
-          `git update-index --skip-worktree ${path.join(
-            nativePackagesDir,
-            nativePackage,
-            'package.json'
-          )}`
-        )
+      execSync(
+        `git update-index --skip-worktree ${path.join(
+          nativePackagesDir,
+          nativePackage,
+          'package.json'
+        )}`
       )
     }
-    await Promise.all(publishPromises)
 
     // Update optional dependencies versions
     let nextPkg = JSON.parse(
@@ -72,7 +67,9 @@ const cwd = process.cwd()
       JSON.stringify(nextPkg, null, 2)
     )
     // lerna publish in next step will fail if git status is not clean
-    await exec('git update-index --skip-worktree packages/next/package.json')
+    await execSync(
+      'git update-index --skip-worktree packages/next/package.json'
+    )
   } catch (err) {
     console.error(err)
     process.exit(1)
