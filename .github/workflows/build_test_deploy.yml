@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [test-publishing]
+    branches: [default]
     tags: [v*]
   pull_request:
     types: [opened, synchronize]
