@@ -1,6 +1,6 @@
 {
   "name": "@padmaia/next",
-  "version": "11.1.1-practice.15",
+  "version": "11.1.1-practice.16",
   "description": "The React Framework",
   "main": "./dist/server/next.js",
   "license": "MIT",
