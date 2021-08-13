@@ -15,7 +15,7 @@ fi
 if [[ $(git describe --exact-match 2> /dev/null || :) =~ -practice ]];
 then
   echo "Publishing practice"
-  yarn run lerna publish from-git --npm-tag practice --yes --no-verify-access
+  yarn run lerna publish from-git --npm-tag practice --yes --no-verify-access --no-git-reset
 
   # Make sure to exit script with code 1 if publish failed
   if [[ ! $? -eq 0 ]];then
