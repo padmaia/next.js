@@ -38,14 +38,14 @@ const cwd = process.cwd()
           platform
         )} --access public ${gitref.includes('canary') ? ' --tag canary' : ''}`
       )
-      // lerna publish in next step will fail if git status is not clean
-      execSync(
-        `git update-index --skip-worktree ${path.join(
-          nativePackagesDir,
-          platform,
-          'package.json'
-        )}`
-      )
+      // // lerna publish in next step will fail if git status is not clean
+      // execSync(
+      //   `git update-index --skip-worktree ${path.join(
+      //     nativePackagesDir,
+      //     platform,
+      //     'package.json'
+      //   )}`
+      // )
     }
 
     // Update optional dependencies versions
@@ -61,8 +61,8 @@ const cwd = process.cwd()
       path.join(path.join(cwd, 'packages/next/package.json')),
       JSON.stringify(nextPkg, null, 2)
     )
-    // lerna publish in next step will fail if git status is not clean
-    execSync('git update-index --skip-worktree packages/next/package.json')
+    // // lerna publish in next step will fail if git status is not clean
+    // execSync('git update-index --skip-worktree packages/next/package.json')
   } catch (err) {
     console.error(err)
     process.exit(1)
