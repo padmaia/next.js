@@ -50,7 +50,7 @@
   "scripts": {
     "dev": "taskr",
     "release": "taskr release",
-    "prepublish": "npm run release && yarn types",
+    "prepublish": "echo 0",
     "types": "echo \"this is fine\"",
     "typescript": "tsc --noEmit --declaration",
     "ncc-compiled": "ncc cache clean && taskr ncc",
