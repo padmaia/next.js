@@ -10,35 +10,44 @@ const obj = {
     display: "block"
 };
 export default (({ display  })=><div className={"jsx-802e359ee0ab20c4 " + _JSXStyle.dynamic([
-        "76aa3eae4e21e4ca",
         [
-            display ? "block" : "none"
-        ]
-    ], [
-        "5ba905f763f40220",
+            "76aa3eae4e21e4ca",
+            [
+                display ? "block" : "none"
+            ]
+        ],
         [
-            darken(color) + 2
-        ]
-    ], [
-        "c4bb394aae9bd00b",
+            "5ba905f763f40220",
+            [
+                darken(color) + 2
+            ]
+        ],
         [
-            darken(color)
+            "c4bb394aae9bd00b",
+            [
+                darken(color)
+            ]
         ]
     ])}>
+
     <p className={"jsx-802e359ee0ab20c4 " + _JSXStyle.dynamic([
-        "76aa3eae4e21e4ca",
         [
-            display ? "block" : "none"
-        ]
-    ], [
-        "5ba905f763f40220",
+            "76aa3eae4e21e4ca",
+            [
+                display ? "block" : "none"
+            ]
+        ],
         [
-            darken(color) + 2
-        ]
-    ], [
-        "c4bb394aae9bd00b",
+            "5ba905f763f40220",
+            [
+                darken(color) + 2
+            ]
+        ],
         [
-            darken(color)
+            "c4bb394aae9bd00b",
+            [
+                darken(color)
+            ]
         ]
     ])}>test</p>
     <_JSXStyle id={"f3d3af42197b4734"}>{`p.${color}.jsx-802e359ee0ab20c4 {color:${otherColor};
@@ -63,7 +72,6 @@ animation-duration:${animationDuration}}`}</_JSXStyle>
     <_JSXStyle id={"1ee00865f92bdbe7"}>{`p.jsx-802e359ee0ab20c4 {-webkit-animation:${animationDuration} forwards ${animationName};
 animation:${animationDuration} forwards ${animationName}}
 div.jsx-802e359ee0ab20c4 {background:${color}}`}</_JSXStyle>
-
     <_JSXStyle id={"4925b8e0a7ab752a"} dynamic={[
         display ? "block" : "none"
     ]}>{`span.__jsx-style-dynamic-selector {display:${display ? "block" : "none"}}`}</_JSXStyle>
