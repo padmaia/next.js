@@ -29,7 +29,8 @@ pub fn transform_css(
     );
     let mut ss = match result {
         Ok(ss) => ss,
-        Err(_) => {
+        Err(e) => {
+            dbg!(e);
             HANDLER.with(|handler| {
                 handler
                     .struct_span_err(

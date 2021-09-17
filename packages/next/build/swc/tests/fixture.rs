@@ -79,7 +79,7 @@ fn next_ssg_fixture(input: PathBuf) {
     );
 }
 
-#[fixture("tests/fixture/styled-jsx/**/input.js")]
+#[fixture("tests/fixture/styled-jsx/real-life/input.js")]
 fn styled_jsx_fixture(input: PathBuf) {
     let output = input.parent().unwrap().join("output.js");
     test_fixture(syntax(), &|_tr| styled_jsx(), &input, &output);
