@@ -76,7 +76,7 @@ impl Task for TransformTask {
 
     fn compute(&mut self) -> napi::Result<Self::Output> {
         try_with_handler(self.c.cm.clone(), |handler| {
-            self.c.run(|| match self.input {
+            let x = self.c.run(|| match self.input {
                 Input::Source(ref s) => {
                     let before_pass = chain!(
                         hook_optimizer(),
@@ -93,7 +93,19 @@ impl Task for TransformTask {
                         noop(),
                     )
                 }
-            })
+            });
+
+            if x.is_ok() {
+                dbg!("OK!");
+            } else {
+                dbg!("NOT OK!");
+            }
+
+            if handler.has_errors() {
+                dbg!("HAS ERROR");
+            }
+
+            x
         })
         .convert_err()
     }
