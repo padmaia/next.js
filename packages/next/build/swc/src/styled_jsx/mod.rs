@@ -52,6 +52,7 @@ pub struct LocalStyle {
     css_span: Span,
     is_dynamic: bool,
     expressions: Vec<Box<Expr>>,
+    is_global: bool,
 }
 
 pub struct ExternalStyle {
@@ -469,6 +470,7 @@ impl StyledJSXTransformer {
             css_span,
             is_dynamic,
             expressions,
+            is_global: is_global_jsx_element,
         });
     }
 
@@ -495,6 +497,7 @@ impl StyledJSXTransformer {
                     &style_info,
                     css,
                     self.style_import_name.as_ref().unwrap(),
+                    self.static_class_name.as_ref(),
                 ))
             }
             JSXStyle::External(style) => Ok(make_external_styled_jsx_el(
@@ -543,6 +546,7 @@ impl StyledJSXTransformer {
                             &style,
                             css,
                             &self.style_import_name.as_ref().unwrap(),
+                            self.static_class_name.as_ref(),
                         )))),
                     }))),
                     PropOrSpread::Prop(Box::new(Prop::KeyValue(KeyValueProp {

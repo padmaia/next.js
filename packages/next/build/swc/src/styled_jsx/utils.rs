@@ -31,10 +31,12 @@ pub fn compute_class_names(
   for style_info in styles {
     match style_info {
       JSXStyle::Local(style_info) => {
-        if !style_info.is_dynamic {
-          static_hashes.push(style_info.hash.clone());
-        } else {
-          dynamic_styles.push(style_info);
+        if !style_info.is_global {
+          if !style_info.is_dynamic {
+            static_hashes.push(style_info.hash.clone());
+          } else {
+            dynamic_styles.push(style_info);
+          }
         }
       }
       JSXStyle::External(external) => {
@@ -213,7 +215,12 @@ pub fn make_local_styled_jsx_el(
   style_info: &LocalStyle,
   css_expr: Expr,
   style_import_name: &str,
+  static_class_name: Option<&String>,
 ) -> JSXElement {
+  let hash_input = match (&style_info.is_dynamic, &static_class_name) {
+    (true, Some(class_name)) => format!("{}{}", style_info.hash, class_name),
+    _ => style_info.hash.clone(),
+  };
   let mut attrs = vec![JSXAttrOrSpread::JSXAttr(JSXAttr {
     name: JSXAttrName::Ident(Ident {
       sym: "id".into(),
@@ -222,7 +229,7 @@ pub fn make_local_styled_jsx_el(
     }),
     value: Some(JSXAttrValue::JSXExprContainer(JSXExprContainer {
       expr: JSXExpr::Expr(Box::new(string_literal_expr(
-        hash_string(&style_info.hash).as_str(),
+        hash_string(&hash_input).as_str(),
       ))),
       span: DUMMY_SP,
     })),
