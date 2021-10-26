@@ -114,7 +114,7 @@ jobs:
             curl -qL https://www.npmjs.com/install.sh | sh
             npm install -g yarn
             curl https://sh.rustup.rs -sSf --output rustup.sh
-            sh rustup.sh -y --profile minimal --default-toolchain stable
+            sh rustup.sh -y --profile minimal --default-toolchain nightly-2021-08-12
             source /usr/local/cargo/env
             echo "~~~~ rustc --version ~~~~"
             rustc --version
