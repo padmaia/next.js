@@ -1,0 +1,7 @@
+on:
+  push:
+    branches: [chore/reusable-swc-workflow]
+
+jobs:
+  call-workflow-1:
+    uses: padmaia/next.js/.github/workflows/reusable.yml
