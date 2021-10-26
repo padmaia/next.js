@@ -130,6 +130,7 @@ jobs:
             env
             freebsd-version
             cargo build --release --manifest-path=packages/next/build/swc/Cargo.toml -p next-swc
+            npm i -g @napi-rs/cli
             yarn --cwd packages/next build-native
             rm -rf node_modules
             rm -rf target
