@@ -130,7 +130,7 @@ jobs:
             env
             freebsd-version
             npm i -g @napi-rs/cli@1.2.1
-            yarn --cwd packages/next build-native
+            CARGO_HOME=/Users/runner/work/next.js/next.js/cargo yarn --cwd packages/next build-native
             rm -rf node_modules
             rm -rf target
 
