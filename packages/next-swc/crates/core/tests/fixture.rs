@@ -1,5 +1,6 @@
 use next_swc::{
     amp_attributes::amp_attributes,
+    demo::my_transform,
     next_dynamic::next_dynamic,
     next_ssg::next_ssg,
     page_config::page_config_test,
@@ -208,4 +209,10 @@ fn shake_exports_fixture_default(input: PathBuf) {
         &input,
         &output,
     );
+}
+
+#[fixture("tests/fixture/demo/input.js")]
+fn demo_transform_fixture(input: PathBuf) {
+    let output = input.parent().unwrap().join("output.js");
+    test_fixture(syntax(), &|_tr| my_transform(), &input, &output);
 }
