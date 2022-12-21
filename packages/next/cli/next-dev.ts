@@ -161,7 +161,7 @@ const nextDev: cliCommand = async (argv) => {
     port,
   }
 
-  // check for postcss, babelrc, swc plugins
+  // check for babelrc, swc plugins
   async function validateNextConfig(isCustomTurbopack: boolean) {
     const { findConfigPath } =
       require('../lib/find-config') as typeof import('../lib/find-config')
@@ -195,8 +195,6 @@ const nextDev: cliCommand = async (argv) => {
     if (babelrc) babelrc = path.basename(babelrc)
 
     let hasNonDefaultConfig
-    let postcssFile
-    let tailwindFile
     let rawNextConfig: NextConfig = {}
 
     try {
@@ -260,17 +258,11 @@ const nextDev: cliCommand = async (argv) => {
           (script) => script.includes('tailwind') || script.includes('postcss')
         )
       }
-      postcssFile = !hasSideCar && (await findConfigPath(dir, 'postcss'))
-      tailwindFile = !hasSideCar && (await findConfigPath(dir, 'tailwind'))
-
-      if (postcssFile) postcssFile = path.basename(postcssFile)
-      if (tailwindFile) tailwindFile = path.basename(tailwindFile)
     } catch (e) {
       console.error('Unexpected error occurred while checking config', e)
     }
 
-    const hasWarningOrError =
-      tailwindFile || postcssFile || babelrc || hasNonDefaultConfig
+    const hasWarningOrError = babelrc || hasNonDefaultConfig
     if (!hasWarningOrError) {
       thankYouMsg = chalk.dim(thankYouMsg)
     }
@@ -303,32 +295,6 @@ const nextDev: cliCommand = async (argv) => {
           'transpilePackages'
         )}\n  To use Turbopack, remove other configuration options.`
       )}   `
-    }
-
-    if (postcssFile || tailwindFile) {
-      console.warn(
-        `${chalk.bold.yellow(
-          'Warning:'
-        )} You are using configuration that may require additional\nsetup with Turbopack. If you already made these changes please\nignore this warning.\n`
-      )
-    }
-
-    if (postcssFile) {
-      console.warn(
-        `- PostCSS detected (${chalk.cyan(postcssFile)})\n` +
-          `  ${chalk.dim(
-            'PostCSS is not yet supported by Next.js v13 with Turbopack.\n  To use with Turbopack, see: https://nextjs.link/turbopack-postcss'
-          )}\n`
-      )
-    }
-
-    if (tailwindFile) {
-      console.warn(
-        `- Tailwind detected (${chalk.cyan(tailwindFile)})\n` +
-          `  ${chalk.dim(
-            'Tailwind is not yet supported by Next.js v13 with Turbopack.\n  To use with Turbopack, see: https://nextjs.link/turbopack-tailwind'
-          )}\n`
-      )
     }
 
     if (unsupportedParts) {
